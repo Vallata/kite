@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kite Gironde</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kite">
+<meta name="theme-color" content="#14212B">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root { --ground:#F4F1EA; --ink:#14212B; --muted:#4A5560; --line:#E2DCCF; --night:#14212B; --night-2:#22323E; --accent:#E4572E; --ok:#0E7C66; --danger:#C8102E; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--ground); color:var(--ink); }
+body { font-family:"IBM Plex Sans", system-ui, sans-serif; font-variant-numeric:tabular-nums; padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
+.app { max-width:720px; margin:0 auto; padding:20px 14px 32px; display:flex; flex-direction:column; gap:16px; }
+h1, h2, h3 { font-family:"Bricolage Grotesque", Georgia, serif; margin:0; }
+.top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.top h1 { font-size:26px; font-weight:800; letter-spacing:-0.5px; }
+.meta { margin:2px 0 0; font-size:12px; color:var(--muted); }
+.refresh { width:44px; height:44px; border-radius:22px; border:1px solid #C9C2B3; background:#fff; color:var(--ink); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; }
+.mode { width:100%; min-height:52px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border-radius:14px; border:2px solid #C9C2B3; background:#fff; font:inherit; color:var(--ink); text-align:left; cursor:pointer; }
+.mode-text { display:flex; flex-direction:column; gap:2px; }
+.mode-title { font-size:14px; font-weight:600; }
+.mode-rule { font-size:11px; color:#3A4550; }
+.switch { width:46px; height:26px; border-radius:13px; background:#9AA3AA; padding:3px; display:flex; flex-shrink:0; }
+.knob { width:20px; height:20px; border-radius:10px; background:#fff; }
+.mode-on { background:#FDE7E2; border-color:var(--danger); }
+.mode-on .switch { background:var(--danger); justify-content:flex-end; }
+.mode:focus-visible, .refresh:focus-visible { outline:3px solid #1E6FD9; outline-offset:2px; }
+.best { background:var(--night); color:var(--ground); border-radius:18px; padding:18px; display:flex; flex-direction:column; gap:12px; }
+.best-kicker { margin:0; font-size:12px; font-weight:600; color:#F2B38F; }
+.best h2 { font-size:34px; font-weight:800; line-height:1; }
+.best-window { margin:0; font-size:15px; font-weight:500; }
+.best-stats { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+.best-stats div { background:var(--night-2); border-radius:10px; padding:8px 10px; display:flex; flex-direction:column; gap:2px; }
+.best-stats span { font-size:10px; color:#B8C2CA; }
+.best-stats strong { font-size:18px; font-weight:600; }
+.ranking { list-style:none; margin:0; padding:12px 0 0; border-top:1px solid #2E404D; display:flex; flex-direction:column; gap:8px; }
+.ranking li { display:flex; align-items:center; gap:10px; font-size:13px; }
+.rank { width:14px; color:#B8C2CA; font-size:12px; }
+.rname { width:96px; font-weight:500; }
+.rwin { flex:1; text-align:right; color:#D8DEE3; font-size:12px; }
+.ranking li.first .rwin { color:#F2B38F; font-weight:600; }
+.spot { background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px 0 10px; display:flex; flex-direction:column; gap:10px; }
+.spot-head { display:flex; justify-content:space-between; align-items:center; padding:0 14px; }
+.spot-head h3 { font-size:20px; font-weight:700; }
+.chip { padding:6px 10px; border-radius:999px; background:#EFEBE3; font-size:12px; font-weight:600; }
+.chip-best { background:var(--accent); }
+.table { display:flex; overflow-x:auto; font-size:12px; -webkit-overflow-scrolling:touch; }
+.labels { position:sticky; left:0; z-index:1; background:#fff; width:66px; flex-shrink:0; padding-left:10px; border-right:1px solid #EDE8DD; color:var(--muted); font-size:10px; }
+.labels > div, .col > div { height:24px; display:flex; align-items:center; }
+.labels .c-time, .col .c-time { height:36px; }
+.lab-safe { font-weight:600; color:var(--ink); }
+.col { width:34px; flex-shrink:0; }
+.col > div { justify-content:center; }
+.col.newday { border-left:2px solid var(--ink); }
+.col .c-time { flex-direction:column; line-height:1.15; }
+.c-time .d { font-size:10px; font-weight:600; color:#0E5A74; white-space:nowrap; align-self:flex-start; padding-left:3px; height:13px; }
+.c-time .h { font-size:11px; }
+.num { font-weight:600; }
+.small { font-size:10px; }
+.rain { color:#1E4FA0; }
+.stars { color:#C99500; font-size:10px; letter-spacing:-1px; }
+.stars.blue { color:#1E6FD9; }
+.safe { width:28px; height:18px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:11px; font-style:normal; }
+.safe-ok { background:var(--ok); } .safe-danger { background:var(--danger); } .safe-none { background:var(--line); } .safe-unknown { background:#8A96A0; }
+.note { margin:0; padding:0 14px; font-size:11px; color:var(--muted); }
+.col-arpege > div:not(.c-time) { filter:saturate(0.35); }
+.col-arpege .c-time { background:#ECE7DC; }
+.col.arp-start { border-left:2px dashed #8A96A0; }
+.legend { display:flex; flex-wrap:wrap; gap:10px 14px; font-size:11px; color:#3A4550; padding:0 4px; }
+.legend span { display:flex; align-items:center; gap:6px; }
+.legend .safe { width:14px; height:10px; border-radius:3px; }
+.error { background:#fff; border:2px solid var(--danger); border-radius:14px; padding:14px; }
+.error p { margin:0 0 8px; }
+.loading { color:var(--muted); font-size:14px; padding:20px 4px; }
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div>
+      <h1>Kite Gironde</h1>
+      <p class="meta" id="meta">AROME France HD 0.01°, Météo-France via Open-Meteo</p>
+    </div>
+    <button class="refresh" id="refresh" aria-label="Actualiser">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+    </button>
+  </header>
+  <button class="mode" id="mode" aria-pressed="false">
+    <span class="mode-text"><span class="mode-title">Mode débutant</span><span class="mode-rule" id="mode-rule"></span></span>
+    <span class="switch"><span class="knob"></span></span>
+  </button>
+  <div id="content"><p class="loading">Chargement des prévisions…</p></div>
+</main>
+
+<script>
+/* ===== RÉGLAGES (à modifier ici) ===== */
+const CONFIG = {
+  // Points de mise à l'eau relevés par Al (lat, lon, altitude en m).
+  spots: [
+    { name: "Lacanau Lac", lat: 44.9793, lon: -1.0952, alt: 14 },
+    { name: "La Hume",     lat: 44.65,   lon: -1.11,   alt: 3 },
+    { name: "Sanguinet",   lat: 44.4832, lon: -1.1015, alt: 5 }  // Estey
+  ],
+  // Seuils des étoiles Windguru (1, 2, 3 étoiles) en noeuds, à recopier de tes préférences Windguru.
+  // 11 est déduit de ta capture ; 16 et 21 sont provisoires.
+  stars: [11, 16, 21],
+  starTempLimit: 10,        // étoiles bleues sous cette température (°C)
+  hoursFrom: 9, hoursTo: 21, // seules heures affichées et prises en compte (9h à 21h inclus)
+  safety: {
+    normal:   { min: 11, max: 35, gustSpread: 10 },
+    beginner: { min: 12, max: 20, gustSpread: 10 }
+  }
+};
+/* ===================================== */
+
+const HD = "meteofrance_arome_france_hd", FALLBACK = "meteofrance_arome_france", ARPEGE = "meteofrance_arpege_europe";
+const HOURLY = ["wind_speed_10m","wind_direction_10m","wind_gusts_10m","temperature_2m","cloud_cover_high","cloud_cover_mid","cloud_cover_low","precipitation","is_day"];
+const TTL = 20 * 60 * 1000;
+const DAYS = ["Di","Lu","Ma","Me","Je","Ve","Sa"];
+const DAYS_LONG = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+const DIRS = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSO","SO","OSO","O","ONO","NO","NNO"];
+const WIND_SCALE = [[5,"#FFFFFF"],[8,"#CFF6F8"],[10,"#A7F2E6"],[12,"#8CEFB0"],[15,"#6EE86B"],[18,"#B6EE3F"],[21,"#F2E53A"],[23,"#F7B23C"],[26,"#F27A3A"],[31,"#E8453A"]];
+const FB_LABEL = { wind_gusts_10m:"rafales", wind_direction_10m:"direction", temperature_2m:"température", cloud_cover_high:"nuages hauts", cloud_cover_mid:"nuages moyens", cloud_cover_low:"nuages bas", precipitation:"pluie", is_day:"jour/nuit" };
+
+function apiUrl() {
+  const p = new URLSearchParams({
+    latitude: CONFIG.spots.map(s => s.lat).join(","),
+    longitude: CONFIG.spots.map(s => s.lon).join(","),
+    elevation: CONFIG.spots.map(s => s.alt).join(","),
+    hourly: HOURLY.join(","), models: [HD, FALLBACK, ARPEGE].join(","),
+    wind_speed_unit: "kn", timezone: "Europe/Paris", forecast_days: "3", cell_selection: "nearest"
+  });
+  return "https://api.open-meteo.com/v1/meteofrance?" + p.toString();
+}
+
+// Open-Meteo suffixe les variables par modèle quand plusieurs modèles sont demandés.
+function series(hourly, v, model) {
+  return hourly[v + "_" + model] || (model === HD ? hourly[v] : null) || [];
+}
+const rnd = (x) => (x === null || x === undefined) ? null : Math.round(x);
+
+function parse(results) {
+  const list = Array.isArray(results) ? results : [results];
+  return list.map((res, idx) => {
+    const hourly = res.hourly, fallbacks = [];
+    const hours = [];
+    hourly.time.forEach((time, i) => {
+      const windHd = series(hourly, "wind_speed_10m", HD)[i];
+      const src = (windHd === null || windHd === undefined) ? "arpege" : "arome";
+      const wind = src === "arome" ? windHd : series(hourly, "wind_speed_10m", ARPEGE)[i];
+      if (wind === null || wind === undefined) return; // hors horizon des deux modèles
+      const get = (v) => {
+        if (src === "arpege") {
+          const a = series(hourly, v, ARPEGE)[i];
+          return (a === null || a === undefined) ? (v === "is_day" && hourly.is_day ? hourly.is_day[i] : null) : a;
+        }
+        let x = series(hourly, v, HD)[i];
+        if (x === null || x === undefined) {
+          x = series(hourly, v, FALLBACK)[i];
+          if (x !== null && x !== undefined && !fallbacks.includes(v)) fallbacks.push(v);
+        }
+        return x === undefined ? null : x;
+      };
+      const day = get("is_day");
+      hours.push({
+        time, src, date: time.slice(0, 10), hour: parseInt(time.slice(11, 13), 10),
+        wind: Math.round(wind), gust: rnd(get("wind_gusts_10m")), dir: get("wind_direction_10m"),
+        temp: rnd(get("temperature_2m")), ch: rnd(get("cloud_cover_high")), cm: rnd(get("cloud_cover_mid")),
+        cl: rnd(get("cloud_cover_low")), precip: get("precipitation"), day: day === null ? null : Number(day) === 1
+      });
+    });
+    return { name: CONFIG.spots[idx].name, hours, fallbacks };
+  });
+}
+
+function makeRules(beginner) {
+  const s = beginner ? CONFIG.safety.beginner : CONFIG.safety.normal;
+  const r = {
+    beginner, min: s.min, max: s.max, spread: s.gustSpread,
+    stars: (h) => CONFIG.stars.filter(t => h.wind >= t).length,
+    blue: (h) => h.temp !== null && h.temp < CONFIG.starTempLimit,
+    status(h) {
+      if (h.wind > r.max) return "danger";
+      if (h.gust !== null && (h.gust - h.wind) > r.spread) return "danger";
+      if (h.wind < r.min || h.day === false) return "none";
+      if (h.gust === null || h.day === null) return "unknown";
+      return "ok";
+    },
+    overMax: (v) => beginner && v !== null && v > r.max
+  };
+  return r;
+}
+
+function bestWindow(hours, rules, nowKey, src) {
+  let best = [], run = [];
+  for (const h of hours) {
+    if (h.src !== src) { run = []; continue; }
+    if (h.time < nowKey || h.hour < CONFIG.hoursFrom || h.hour > CONFIG.hoursTo) continue;
+    if (rules.status(h) === "ok") {
+      const last = run[run.length - 1];
+      run = (last && last.date === h.date && h.hour === last.hour + 1) ? run.concat([h]) : [h];
+    } else run = [];
+    if (run.length > best.length) best = run.slice();
+  }
+  return best;
+}
+
+function wday(date) { const [y, m, d] = date.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)).getUTCDay(); }
+function windowLabel(w, long) {
+  if (!w.length) return long ? "Aucun créneau" : "aucun créneau";
+  const a = w[0], b = w[w.length - 1];
+  const base = (long ? DAYS_LONG : DAYS)[wday(a.date)] + " " + parseInt(a.date.slice(8), 10) + ", " + a.hour + "h à " + (b.hour + 1) + "h";
+  if (a.src !== "arpege") return base;
+  return base + (long ? " (ARPEGE 11 km, indicatif)" : " · ARPEGE");
+}
+function parisNowKey(date) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" })
+    .formatToParts(date || new Date()).map(x => [x.type, x.value]));
+  return p.year + "-" + p.month + "-" + p.day + "T" + p.hour + ":00";
+}
+
+function buildReports(data, rules, nowKey) {
+  const spots = data.map(s => {
+    const wArome = bestWindow(s.hours, rules, nowKey, "arome");
+    const w = wArome.length ? wArome : bestWindow(s.hours, rules, nowKey, "arpege");
+    const shown = s.hours.filter(h => h.time >= nowKey && h.hour >= CONFIG.hoursFrom && h.hour <= CONFIG.hoursTo);
+    return {
+      name: s.name, fallbacks: s.fallbacks, hours: shown, window: w, arome: wArome.length > 0,
+      avg: w.length ? Math.round(w.reduce((a, h) => a + h.wind, 0) / w.length) : null,
+      maxGust: w.length ? Math.max(...w.map(h => h.gust ?? -Infinity)) : null,
+      dir: w.length ? w[Math.floor(w.length / 2)].dir : null,
+      okHours: shown.filter(h => h.src === "arome" && rules.status(h) === "ok").length,
+      hasArpege: shown.some(h => h.src === "arpege")
+    };
+  });
+  // Un créneau AROME passe toujours avant un créneau ARPEGE, moins fiable.
+  const ranking = spots.slice().sort((a, b) => (Number(b.arome) - Number(a.arome)) || (b.window.length - a.window.length) || ((b.avg || 0) - (a.avg || 0)));
+  return { spots, ranking, best: ranking[0] && ranking[0].window.length ? ranking[0] : null };
+}
+
+/* ---------- rendu ---------- */
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function windBg(v, rules) {
+  if (v === null) return "transparent";
+  if (rules.overMax(v)) return "#C8102E";
+  for (const [lim, col] of WIND_SCALE) if (v < lim) return col;
+  return "#C93BD1";
+}
+const windFg = (v, rules) => rules.overMax(v) ? "#FFFFFF" : "#14212B";
+function tempBg(t) { if (t === null) return "transparent"; return t < 5 ? "#D8E6F5" : t < 10 ? "#F7EDCB" : t < 15 ? "#F7E3B5" : t < 20 ? "#F6C98A" : t < 24 ? "#F2A868" : t < 27 ? "#EE8A55" : "#E86A45"; }
+const cloudBg = (c) => (!c) ? "transparent" : c >= 90 ? "#6F7479" : c >= 50 ? "#A4A8AC" : "#DADCDE";
+const cloudFg = (c) => c && c >= 50 ? "#FFFFFF" : "#14212B";
+const dirLabel = (d) => d === null ? "–" : DIRS[Math.round((d % 360) / 22.5) % 16];
+
+function render(rep, rules) {
+  const b = rep.best;
+  let html = '<section class="best"><p class="best-kicker">Meilleur créneau</p>';
+  if (b) {
+    html += '<h2>' + esc(b.name) + '</h2><p class="best-window">' + windowLabel(b.window, true) + '</p>' +
+      '<div class="best-stats"><div><span>Vent moyen</span><strong>' + b.avg + ' nds</strong></div>' +
+      '<div><span>Rafale max</span><strong>' + (isFinite(b.maxGust) ? b.maxGust : "–") + ' nds</strong></div>' +
+      '<div><span>Direction</span><strong>' + dirLabel(b.dir) + '</strong></div></div>';
+  } else {
+    html += '<h2>Pas de kite</h2><p class="best-window">Aucun créneau kitable sur l\'horizon AROME HD.</p>';
+  }
+  html += '<ol class="ranking">' + rep.ranking.map((s, i) =>
+    '<li class="' + (i === 0 && s.window.length ? "first" : "") + '"><span class="rank">' + (i + 1) + '</span><span class="rname">' + esc(s.name) +
+    '</span><span class="rwin">' + windowLabel(s.window, false) + '</span></li>').join("") + '</ol></section>';
+
+  for (const s of rep.ranking) {
+    html += '<section class="spot"><div class="spot-head"><h3>' + esc(s.name) + '</h3><span class="chip ' + (s === b ? "chip-best" : "") + '">' + s.okHours + ' h kitables</span></div>' +
+      '<div class="table"><div class="labels"><div class="c-time"></div><div>Vent</div><div>Rafales</div><div>Dir.</div><div>°C</div><div>Nuages H</div><div>Nuages M</div><div>Nuages B</div><div>Pluie</div><div>Note WG</div><div class="lab-safe">Sécurité</div></div>';
+    let prev = null, prevSrc = null;
+    const perDay = {};
+    for (const h of s.hours) perDay[h.date] = (perDay[h.date] || 0) + 1;
+    for (const h of s.hours) {
+      const first = h.date !== prev; prev = h.date;
+      const firstArp = h.src === "arpege" && prevSrc !== "arpege"; prevSrc = h.src;
+      const st = rules.status(h), n = rules.stars(h);
+      html += '<div class="col ' + (first ? "newday " : "") + (h.src === "arpege" ? "col-arpege " : "") + (firstArp && !first ? "arp-start" : "") + '">' +
+        '<div class="c-time"><span class="d">' + (first ? DAYS[wday(h.date)] + (perDay[h.date] > 1 ? " " + parseInt(h.date.slice(8), 10) + "." : "") : "") + '</span><span class="h">' + String(h.hour).padStart(2, "0") + 'h</span></div>' +
+        '<div class="num" style="background:' + windBg(h.wind, rules) + ';color:' + windFg(h.wind, rules) + '">' + h.wind + '</div>' +
+        '<div class="num" style="background:' + windBg(h.gust, rules) + ';color:' + windFg(h.gust, rules) + '">' + (h.gust ?? "") + '</div>' +
+        '<div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14212B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (((h.dir || 0) + 180) % 360) + 'deg)" aria-label="' + dirLabel(h.dir) + '"><path d="M12 20V4"/><path d="M6 10l6-6 6 6"/></svg></div>' +
+        '<div style="background:' + tempBg(h.temp) + '">' + (h.temp ?? "") + '</div>' +
+        [h.ch, h.cm, h.cl].map(c => '<div class="small" style="background:' + cloudBg(c) + ';color:' + cloudFg(c) + '">' + (c > 0 ? c : "") + '</div>').join("") +
+        '<div class="small rain">' + (h.precip >= 0.1 ? h.precip.toFixed(1) : "") + '</div>' +
+        '<div class="stars ' + (rules.blue(h) ? "blue" : "") + '">' + "★".repeat(n) + '</div>' +
+        '<div><span class="safe safe-' + st + '">' + (st === "danger" ? "!" : st === "unknown" ? "?" : "") + '</span></div></div>';
+    }
+    html += '</div>';
+    if (s.hasArpege) html += '<p class="note">Colonnes grisées : modèle ARPEGE 0.1° (environ 11 km), au-delà de l\'horizon AROME HD. Bien moins précis sur les lacs et le Bassin, à prendre comme une tendance.</p>';
+    if (s.fallbacks.length) html += '<p class="note">Absent de l\'AROME HD, pris dans l\'AROME 2,5 km : ' + s.fallbacks.map(v => FB_LABEL[v] || v).join(", ") + '.</p>';
+    html += '</section>';
+  }
+  html += '<div class="legend"><span><i class="safe safe-ok"></i>Kitable</span><span><i class="safe safe-danger"></i>Danger</span><span><i class="safe safe-none"></i>Pas assez de vent ou nuit</span></div>';
+  return html;
+}
+
+/* ---------- données et cache ---------- */
+function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+async function getData(force) {
+  const cached = JSON.parse(load("kite-cache") || "null");
+  if (!force && cached && Date.now() - cached.at < TTL && cached.url === apiUrl()) return cached;
+  try {
+    const res = await fetch(apiUrl());
+    const body = await res.json();
+    if (!res.ok || body.error) throw new Error(body.reason || ("HTTP " + res.status));
+    const fresh = { at: Date.now(), url: apiUrl(), data: parse(body) };
+    store("kite-cache", JSON.stringify(fresh));
+    return fresh;
+  } catch (e) {
+    if (cached) return Object.assign({ stale: true, err: e.message }, cached);
+    throw e;
+  }
+}
+
+async function refresh(force) {
+  const beginner = load("kite-mode") === "debutant";
+  const rules = makeRules(beginner);
+  const modeBtn = document.getElementById("mode");
+  modeBtn.classList.toggle("mode-on", beginner);
+  modeBtn.setAttribute("aria-pressed", String(beginner));
+  document.getElementById("mode-rule").textContent = (beginner ? "Activé : " : "Désactivé. Actuellement : ") + rules.min + " à " + rules.max + " nds, rafales ≤ vent +" + rules.spread + ". Direction non vérifiée.";
+  const content = document.getElementById("content");
+  try {
+    const d = await getData(force);
+    const t = new Date(d.at).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" });
+    document.getElementById("meta").textContent = "AROME France HD 0.01° (+ ARPEGE au-delà), Météo-France via Open-Meteo, récupéré à " + t + (d.stale ? " (hors ligne)" : "");
+    content.innerHTML = render(buildReports(d.data, rules, parisNowKey()), rules);
+  } catch (e) {
+    content.innerHTML = '<section class="error"><p><strong>Prévisions indisponibles.</strong> ' + esc(e.message) + '</p><p>Vérifie ta connexion puis touche le bouton d\'actualisation.</p></section>';
+  }
+}
+
+if (typeof document !== "undefined") {
+  document.getElementById("refresh").addEventListener("click", () => refresh(true));
+  document.getElementById("mode").addEventListener("click", () => {
+    store("kite-mode", load("kite-mode") === "debutant" ? "normal" : "debutant");
+    refresh(false);
+  });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(false); });
+  refresh(false);
+}
+</script>
+</body>
+</html>
