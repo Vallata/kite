@@ -69,7 +69,7 @@ h1, h2, h3 { font-family:"Bricolage Grotesque", Georgia, serif; margin:0; }
 .stars { color:#C99500; font-size:10px; letter-spacing:-1px; }
 .stars.blue { color:#1E6FD9; }
 .safe { width:28px; height:18px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:11px; font-style:normal; }
-.safe-ok { background:var(--ok); } .safe-danger { background:var(--danger); } .safe-none { background:var(--line); } .safe-unknown { background:#8A96A0; }
+.safe-ok { background:var(--ok); } .safe-danger { background:var(--danger); } .safe-none, .safe-short { background:var(--line); } .safe-unknown { background:#8A96A0; }
 .note { margin:0; padding:0 14px; font-size:11px; color:var(--muted); }
 .col-arpege > div:not(.c-time) { filter:saturate(0.35); }
 .col-arpege .c-time { background:#ECE7DC; }
@@ -80,6 +80,90 @@ h1, h2, h3 { font-family:"Bricolage Grotesque", Georgia, serif; margin:0; }
 .error { background:#fff; border:2px solid var(--danger); border-radius:14px; padding:14px; }
 .error p { margin:0 0 8px; }
 .loading { color:var(--muted); font-size:14px; padding:20px 4px; }
+
+.verdict { margin:0; font-size:13px; font-weight:700; display:inline-flex; align-self:flex-start; padding:4px 10px; border-radius:999px; }
+.v-yes { background:#0E7C66; color:#fff; } .v-maybe { background:#F2B38F; color:#14212B; } .v-no { background:#C8102E; color:#fff; }
+.plan { background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px 12px 12px; display:flex; flex-direction:column; gap:12px; }
+.plan-head { display:flex; justify-content:space-between; align-items:baseline; }
+.plan-head h2 { font-size:18px; font-weight:700; }
+.plan-sub { font-size:11px; color:var(--muted); }
+.plan-day { display:flex; flex-direction:column; gap:4px; }
+.plan-date { font-size:13px; font-weight:600; }
+.plan-arp { font-size:10px; font-weight:500; color:var(--muted); background:#ECE7DC; padding:1px 6px; border-radius:6px; margin-left:4px; }
+.plan-row { display:flex; align-items:center; gap:6px; text-decoration:none; color:var(--ink); min-height:26px; }
+.plan-name { width:78px; flex-shrink:0; font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.plan-cells { flex:1; display:grid; grid-template-columns:repeat(13, minmax(0,1fr)); gap:2px; }
+.plan-ticks { min-height:14px; }
+.tick { font-size:9px; color:var(--muted); text-align:left; white-space:nowrap; }
+.pc { height:24px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:600; }
+.pc-ok { background:var(--ok); color:#fff; }
+.pc-danger { background:var(--danger); color:#fff; }
+.pc-none, .pc-unknown, .pc-short { background:#EFEBE3; color:#6B747C; }
+.pc-past { background:transparent; }
+.pc-arp { background-image:repeating-linear-gradient(135deg, rgba(255,255,255,.28) 0 3px, transparent 3px 6px); }
+.pc-ok.pc-arp { background-color:#4E9C8C; color:#fff; }
+.pc-danger.pc-arp { background-color:#D9536A; color:#fff; }
+.spot-sub { font-size:11px; color:var(--muted); }
+.spot-head { gap:8px; }
+.chip { white-space:nowrap; }
+
+.best-when { margin:0; font-size:18px; font-weight:600; }
+.best-wind { margin:0; font-size:14px; color:#D8DEE3; }
+.best-wind strong { font-size:22px; color:#F4F1EA; }
+.sessions { display:flex; flex-direction:column; gap:8px; }
+.sessions h2 { font-size:18px; font-weight:700; }
+.sess-note { font-family:"IBM Plex Sans", system-ui, sans-serif; font-size:12px; font-weight:400; color:var(--muted); }
+.sessions ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+.sessions li { display:flex; align-items:center; gap:12px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:10px 14px; }
+.sessions li.sess-best { border:2px solid var(--ok); }
+.sessions li.sess-arp { background:#F7F4EE; border-style:dashed; }
+.sess-day { width:40px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; font-size:11px; color:var(--muted); line-height:1.1; }
+.sess-day b { font-size:20px; color:var(--ink); font-weight:700; }
+.sess-main { flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
+.sess-spot { font-weight:600; font-size:15px; }
+.sess-hours { font-size:13px; color:#3A4550; }
+.sess-wind { display:flex; flex-direction:column; align-items:flex-end; font-size:12px; color:var(--muted); }
+.sess-w { white-space:nowrap; }
+.sess-wind b { font-size:22px; color:var(--ok); font-weight:700; line-height:1; }
+.sess-arp .sess-wind b { color:#5F6B74; }
+.sess-wind small { font-size:11px; }
+.detail-title { margin:10px 0 -6px; font-size:12px; font-weight:600; color:var(--muted); padding:0 4px; }
+details.spot { padding:0; gap:0; }
+details.spot[open] > .table { margin-top:8px; }
+details.spot[open] > .note { margin-top:8px; }
+details.spot > summary { list-style:none; cursor:pointer; padding:14px; }
+details.spot > summary::-webkit-details-marker { display:none; }
+details.spot[open] > summary { padding-bottom:4px; }
+details.spot[open] { padding-bottom:10px; }
+.spot-name { display:flex; flex-direction:column; gap:2px; }
+.chev { width:10px; height:10px; border-right:2px solid var(--ink); border-bottom:2px solid var(--ink); transform:rotate(45deg); margin-right:4px; flex-shrink:0; }
+details[open] .chev { transform:rotate(-135deg); }
+summary:focus-visible { outline:3px solid #1E6FD9; outline-offset:-3px; border-radius:16px; }
+
+/* ---- finitions ---- */
+.app { gap:20px; padding:24px 16px 40px; }
+.top h1 { font-size:28px; }
+.meta { margin-top:4px; line-height:1.4; }
+.mode { padding:14px 16px; border-width:1px; }
+.mode-title { font-size:15px; }
+.mode-rule { font-size:12px; line-height:1.4; }
+.best { padding:22px 20px 24px; gap:0; border-radius:20px; }
+.verdict { font-size:16px; padding:7px 16px 7px 12px; gap:8px; align-items:center; margin-bottom:16px; letter-spacing:.2px; }
+.v-dot { width:8px; height:8px; border-radius:4px; background:currentColor; opacity:.85; }
+.best h2 { font-size:40px; letter-spacing:-0.5px; margin-bottom:12px; }
+.best-when { font-size:19px; margin-bottom:14px; }
+.best-wind { font-size:14px; line-height:1.3; padding-top:14px; border-top:1px solid #2E404D; }
+.best-wind strong { font-size:28px; margin-right:2px; }
+.sessions { gap:10px; margin-top:8px; }
+.sessions h2 { font-size:20px; }
+.sessions li { padding:12px 16px; }
+.detail { display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+.detail-title { margin:0; padding:0 4px; font-size:12px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); }
+.spots { display:flex; flex-direction:column; gap:10px; }
+details.spot > summary { padding:16px 18px; }
+.spot-head h3 { font-size:21px; }
+.spot-name { gap:4px; }
+.spot-sub { font-size:13px; }
 </style>
 </head>
 <body>
@@ -94,7 +178,7 @@ h1, h2, h3 { font-family:"Bricolage Grotesque", Georgia, serif; margin:0; }
     </button>
   </header>
   <button class="mode" id="mode" aria-pressed="false">
-    <span class="mode-text"><span class="mode-title">Mode débutant</span><span class="mode-rule" id="mode-rule"></span></span>
+    <span class="mode-text"><span class="mode-title">Mode pro</span><span class="mode-rule" id="mode-rule"></span></span>
     <span class="switch"><span class="knob"></span></span>
   </button>
   <div id="content"><p class="loading">Chargement des prévisions…</p></div>
@@ -115,8 +199,10 @@ const CONFIG = {
   starTempLimit: 10,        // étoiles bleues sous cette température (°C)
   hoursFrom: 9, hoursTo: 21, // seules heures affichées et prises en compte (9h à 21h inclus)
   safety: {
-    normal:   { min: 11, max: 35, gustSpread: 10 },
-    beginner: { min: 12, max: 20, gustSpread: 10 }
+    // minRun : nombre d'heures kitables d'affilée nécessaires pour qu'elles comptent
+    // Mode débutant = par défaut ; mode pro = bouton activé
+    pro:      { min: 10, max: 35, gustSpread: 10, minRun: 3 },
+    beginner: { min: 10, max: 20, gustSpread: 10, minRun: 3 }
   }
 };
 /* ===================================== */
@@ -182,12 +268,16 @@ function parse(results) {
 }
 
 function makeRules(beginner) {
-  const s = beginner ? CONFIG.safety.beginner : CONFIG.safety.normal;
+  const s = beginner ? CONFIG.safety.beginner : CONFIG.safety.pro;
   const r = {
-    beginner, min: s.min, max: s.max, spread: s.gustSpread,
+    beginner, min: s.min, max: s.max, spread: s.gustSpread, minRun: s.minRun || 1,
     stars: (h) => CONFIG.stars.filter(t => h.wind >= t).length,
     blue: (h) => h.temp !== null && h.temp < CONFIG.starTempLimit,
     status(h) {
+      const b = r.baseStatus(h);
+      return (b === "ok" && h.short) ? "short" : b;
+    },
+    baseStatus(h) {
       if (h.wind > r.max) return "danger";
       if (h.gust !== null && (h.gust - h.wind) > r.spread) return "danger";
       if (h.wind < r.min || h.day === false) return "none";
@@ -227,8 +317,25 @@ function parisNowKey(date) {
   return p.year + "-" + p.month + "-" + p.day + "T" + p.hour + ":00";
 }
 
+// Marque les heures kitables isolées (suite plus courte que minRun) : elles ne comptent pas.
+function markShortRuns(hours, rules) {
+  let run = [];
+  const flush = () => { const short = run.length < rules.minRun; run.forEach(h => { h.short = short; }); run = []; };
+  for (const h of hours) {
+    h.short = false;
+    const inRange = h.hour >= CONFIG.hoursFrom && h.hour <= CONFIG.hoursTo;
+    if (inRange && rules.baseStatus(h) === "ok") {
+      const last = run[run.length - 1];
+      if (last && !(last.date === h.date && h.hour === last.hour + 1 && last.src === h.src)) flush();
+      run.push(h);
+    } else flush();
+  }
+  flush();
+}
+
 function buildReports(data, rules, nowKey) {
   const spots = data.map(s => {
+    markShortRuns(s.hours.filter(h => h.time >= nowKey), rules);
     const wArome = bestWindow(s.hours, rules, nowKey, "arome");
     const w = wArome.length ? wArome : bestWindow(s.hours, rules, nowKey, "arpege");
     const shown = s.hours.filter(h => h.time >= nowKey && h.hour >= CONFIG.hoursFrom && h.hour <= CONFIG.hoursTo);
@@ -260,24 +367,68 @@ const cloudBg = (c) => (!c) ? "transparent" : c >= 90 ? "#6F7479" : c >= 50 ? "#
 const cloudFg = (c) => c && c >= 50 ? "#FFFFFF" : "#14212B";
 const dirLabel = (d) => d === null ? "–" : DIRS[Math.round((d % 360) / 22.5) % 16];
 
-function render(rep, rules) {
-  const b = rep.best;
-  let html = '<section class="best"><p class="best-kicker">Meilleur créneau</p>';
-  if (b) {
-    html += '<h2>' + esc(b.name) + '</h2><p class="best-window">' + windowLabel(b.window, true) + '</p>' +
-      '<div class="best-stats"><div><span>Vent moyen</span><strong>' + b.avg + ' nds</strong></div>' +
-      '<div><span>Rafale max</span><strong>' + (isFinite(b.maxGust) ? b.maxGust : "–") + ' nds</strong></div>' +
-      '<div><span>Direction</span><strong>' + dirLabel(b.dir) + '</strong></div></div>';
-  } else {
-    html += '<h2>Pas de kite</h2><p class="best-window">Aucun créneau kitable sur l\'horizon AROME HD.</p>';
+function sessionsOf(spot, rules) {
+  const out = []; let run = [];
+  const close = () => {
+    if (run.length) {
+      const g = run.map(h => h.gust).filter(x => x !== null);
+      out.push({ spot: spot.name, date: run[0].date, from: run[0].hour, to: run[run.length - 1].hour + 1, src: run[0].src,
+        avg: Math.round(run.reduce((a, h) => a + h.wind, 0) / run.length), gmax: g.length ? Math.max(...g) : null,
+        dir: run[Math.floor(run.length / 2)].dir, len: run.length });
+    }
+    run = [];
+  };
+  for (const h of spot.hours) {
+    if (rules.status(h) === "ok") {
+      const last = run[run.length - 1];
+      if (last && !(last.date === h.date && h.hour === last.hour + 1 && last.src === h.src)) close();
+      run.push(h);
+    } else close();
   }
-  html += '<ol class="ranking">' + rep.ranking.map((s, i) =>
-    '<li class="' + (i === 0 && s.window.length ? "first" : "") + '"><span class="rank">' + (i + 1) + '</span><span class="rname">' + esc(s.name) +
-    '</span><span class="rwin">' + windowLabel(s.window, false) + '</span></li>').join("") + '</ol></section>';
+  close();
+  return out;
+}
+const dayShort = (date) => DAYS[wday(date)] + " " + parseInt(date.slice(8), 10);
+const dayLong = (date) => DAYS_LONG[wday(date)] + " " + parseInt(date.slice(8), 10);
 
-  for (const s of rep.ranking) {
-    html += '<section class="spot"><div class="spot-head"><h3>' + esc(s.name) + '</h3><span class="chip ' + (s === b ? "chip-best" : "") + '">' + s.okHours + ' h kitables</span></div>' +
-      '<div class="table"><div class="labels"><div class="c-time"></div><div>Vent</div><div>Rafales</div><div>Dir.</div><div>°C</div><div>Nuages H</div><div>Nuages M</div><div>Nuages B</div><div>Pluie</div><div>Note WG</div><div class="lab-safe">Sécurité</div></div>';
+function render(rep, rules) {
+  const all = rep.spots.flatMap(sp => sessionsOf(sp, rules));
+  const sure = all.filter(x => x.src === "arome");
+  // meilleure session : AROME d'abord, puis la plus longue, puis la plus ventée
+  const best = all.slice().sort((x, y) => (Number(y.src === "arome") - Number(x.src === "arome")) || (y.len - x.len) || (y.avg - x.avg))[0];
+  let html = '<section class="best">';
+  if (best) {
+    html += '<p class="verdict ' + (best.src === "arome" ? "v-yes" : "v-maybe") + '"><span class="v-dot"></span>' + (best.src === "arome" ? "Ça kite" : "Peut-être, ARPEGE indicatif") + '</p>' +
+      '<h2>' + esc(best.spot) + '</h2>' +
+      '<p class="best-when">' + dayLong(best.date) + ' · ' + best.from + 'h – ' + best.to + 'h</p>' +
+      '<p class="best-wind"><strong>' + best.avg + '</strong> nds de moyenne · rafales ' + (best.gmax ?? "–") + ' · ' + dirLabel(best.dir) + '</p>';
+  } else {
+    let top = null;
+    for (const sp of rep.spots) for (const h of sp.hours) if (!top || h.wind > top.h.wind) top = { h, spot: sp.name };
+    html += '<p class="verdict v-no"><span class="v-dot"></span>Pas de session</p><h2>Rien de kitable</h2>' +
+      '<p class="best-when">sur les 3 prochains jours (' + rules.min + ' nds, ' + rules.minRun + ' h d\'affilée)</p>' +
+      (top ? '<p class="best-wind">Meilleur vent prévu : ' + esc(top.spot) + ', ' + dayShort(top.h.date).toLowerCase() + ' à ' + top.h.hour + 'h, <strong>' + top.h.wind + '</strong> nds</p>' : '');
+  }
+  html += '</section>';
+
+  if (all.length > 1) {
+    const sorted = all.slice().sort((x, y) => (x.date + String(x.from).padStart(2, "0")).localeCompare(y.date + String(y.from).padStart(2, "0")));
+    html += '<section class="sessions"><h2>' + all.length + ' sessions' + (sure.length < all.length ? ' <span class="sess-note">dont ' + (all.length - sure.length) + ' en ARPEGE</span>' : '') + '</h2><ul>' +
+      sorted.map(x => '<li class="' + (x === best ? "sess-best " : "") + (x.src === "arpege" ? "sess-arp" : "") + '">' +
+        '<span class="sess-day">' + DAYS[wday(x.date)] + '<b>' + parseInt(x.date.slice(8), 10) + '</b></span>' +
+        '<span class="sess-main"><span class="sess-spot">' + esc(x.spot) + '</span><span class="sess-hours">' + x.from + 'h – ' + x.to + 'h' + (x.src === "arpege" ? ' · indicatif' : '') + '</span></span>' +
+        '<span class="sess-wind"><span class="sess-w"><b>' + x.avg + '</b> nds</span><small>raf ' + (x.gmax ?? "–") + '</small></span></li>').join('') +
+      '</ul></section>';
+  }
+
+  html += '<section class="detail"><p class="detail-title">Détail par spot</p><div class="spots">';
+  rep.ranking.forEach((s, si) => {
+    const ses = sessionsOf(s, rules);
+    const maxW = s.hours.length ? Math.max(...s.hours.map(h => h.wind)) : 0;
+    html += '<details class="spot"><summary class="spot-head"><span class="spot-name"><h3>' + esc(s.name) + '</h3><span class="spot-sub">' +
+      (!s.hours.length ? 'Pas de prévision' : ses.length ? ses.length + ' session' + (ses.length > 1 ? 's' : '') + ', prochaine ' + dayShort(ses[0].date).toLowerCase() + ' ' + ses[0].from + 'h – ' + ses[0].to + 'h' : 'Rien de kitable, max ' + maxW + ' nds') +
+      '</span></span><span class="chev" aria-hidden="true"></span></summary>' +
+      '<div class="table"><div class="labels"><div class="c-time"></div><div class="lab-safe">Kitable</div><div>Note WG</div><div>Vent</div><div>Rafales</div><div>Dir.</div><div>°C</div><div>Nuages H</div><div>Nuages M</div><div>Nuages B</div><div>Pluie</div></div>';
     let prev = null, prevSrc = null;
     const perDay = {};
     for (const h of s.hours) perDay[h.date] = (perDay[h.date] || 0) + 1;
@@ -287,21 +438,21 @@ function render(rep, rules) {
       const st = rules.status(h), n = rules.stars(h);
       html += '<div class="col ' + (first ? "newday " : "") + (h.src === "arpege" ? "col-arpege " : "") + (firstArp && !first ? "arp-start" : "") + '">' +
         '<div class="c-time"><span class="d">' + (first ? DAYS[wday(h.date)] + (perDay[h.date] > 1 ? " " + parseInt(h.date.slice(8), 10) + "." : "") : "") + '</span><span class="h">' + String(h.hour).padStart(2, "0") + 'h</span></div>' +
+        '<div><span class="safe safe-' + st + '">' + (st === "danger" ? "!" : st === "unknown" ? "?" : "") + '</span></div>' +
+        '<div class="stars ' + (rules.blue(h) ? "blue" : "") + '">' + "★".repeat(n) + '</div>' +
         '<div class="num" style="background:' + windBg(h.wind, rules) + ';color:' + windFg(h.wind, rules) + '">' + h.wind + '</div>' +
         '<div class="num" style="background:' + windBg(h.gust, rules) + ';color:' + windFg(h.gust, rules) + '">' + (h.gust ?? "") + '</div>' +
         '<div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14212B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(' + (((h.dir || 0) + 180) % 360) + 'deg)" aria-label="' + dirLabel(h.dir) + '"><path d="M12 20V4"/><path d="M6 10l6-6 6 6"/></svg></div>' +
         '<div style="background:' + tempBg(h.temp) + '">' + (h.temp ?? "") + '</div>' +
         [h.ch, h.cm, h.cl].map(c => '<div class="small" style="background:' + cloudBg(c) + ';color:' + cloudFg(c) + '">' + (c > 0 ? c : "") + '</div>').join("") +
-        '<div class="small rain">' + (h.precip >= 0.1 ? h.precip.toFixed(1) : "") + '</div>' +
-        '<div class="stars ' + (rules.blue(h) ? "blue" : "") + '">' + "★".repeat(n) + '</div>' +
-        '<div><span class="safe safe-' + st + '">' + (st === "danger" ? "!" : st === "unknown" ? "?" : "") + '</span></div></div>';
+        '<div class="small rain">' + (h.precip >= 0.1 ? h.precip.toFixed(1) : "") + '</div></div>';
     }
     html += '</div>';
     if (s.hasArpege) html += '<p class="note">Colonnes grisées : modèle ARPEGE 0.1° (environ 11 km), au-delà de l\'horizon AROME HD. Bien moins précis sur les lacs et le Bassin, à prendre comme une tendance.</p>';
     if (s.fallbacks.length) html += '<p class="note">Absent de l\'AROME HD, pris dans l\'AROME 2,5 km : ' + s.fallbacks.map(v => FB_LABEL[v] || v).join(", ") + '.</p>';
-    html += '</section>';
-  }
-  html += '<div class="legend"><span><i class="safe safe-ok"></i>Kitable</span><span><i class="safe safe-danger"></i>Danger</span><span><i class="safe safe-none"></i>Pas assez de vent ou nuit</span></div>';
+    html += '</details>';
+  });
+  html += '</div></section>';
   return html;
 }
 
@@ -326,12 +477,13 @@ async function getData(force) {
 }
 
 async function refresh(force) {
-  const beginner = load("kite-mode") === "debutant";
+  const pro = load("kite-pro") === "1";
+  const beginner = !pro;
   const rules = makeRules(beginner);
   const modeBtn = document.getElementById("mode");
-  modeBtn.classList.toggle("mode-on", beginner);
-  modeBtn.setAttribute("aria-pressed", String(beginner));
-  document.getElementById("mode-rule").textContent = (beginner ? "Activé : " : "Désactivé. Actuellement : ") + rules.min + " à " + rules.max + " nds, rafales ≤ vent +" + rules.spread + ". Direction non vérifiée.";
+  modeBtn.classList.toggle("mode-on", pro);
+  modeBtn.setAttribute("aria-pressed", String(pro));
+  document.getElementById("mode-rule").textContent = (pro ? "Activé : " : "Désactivé, mode débutant : ") + rules.min + " à " + rules.max + " nds, rafales ≤ vent +" + rules.spread + (rules.minRun > 1 ? ", " + rules.minRun + " h d'affilée minimum" : "") + ". Direction non vérifiée.";
   const content = document.getElementById("content");
   try {
     const d = await getData(force);
@@ -346,7 +498,7 @@ async function refresh(force) {
 if (typeof document !== "undefined") {
   document.getElementById("refresh").addEventListener("click", () => refresh(true));
   document.getElementById("mode").addEventListener("click", () => {
-    store("kite-mode", load("kite-mode") === "debutant" ? "normal" : "debutant");
+    store("kite-pro", load("kite-pro") === "1" ? "0" : "1");
     refresh(false);
   });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(false); });
