@@ -164,6 +164,30 @@ details.spot > summary { padding:16px 18px; }
 .spot-head h3 { font-size:21px; }
 .spot-name { gap:4px; }
 .spot-sub { font-size:13px; }
+
+/* ---- cartes spot ---- */
+details.spot > summary { display:flex; flex-direction:column; align-items:flex-start; gap:10px; -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; }
+details.spot > summary:focus { outline:none; }
+details.spot > summary:focus-visible { outline:none; box-shadow:inset 0 0 0 2px #1E6FD9; border-radius:16px; }
+.spot-top { width:100%; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.spot-top h3 { font-size:21px; font-weight:700; }
+.sst { display:flex; align-items:center; gap:8px; width:100%; border-radius:12px; padding:10px 12px; font-size:15px; font-weight:600; box-sizing:border-box; }
+.sst-ok { background:#E2F1EC; color:#0B5E4E; }
+.sst-maybe { background:#FBEBDD; color:#8A4B12; }
+.sst-no { background:#F1EEE7; color:#6B747C; font-weight:500; }
+.sst .v-dot { flex-shrink:0; }
+.sst-when { flex:1; }
+.sst-wind { font-size:15px; font-weight:700; white-space:nowrap; }
+.sst-more { font-size:12px; color:var(--muted); margin-top:-4px; padding-left:2px; }
+
+.also { margin-top:18px; padding-top:14px; border-top:1px solid #2E404D; display:flex; flex-direction:column; gap:8px; }
+.also-title { margin:0; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:#B8C2CA; }
+.also ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+.also li { display:flex; align-items:center; gap:10px; background:var(--night-2); border-radius:10px; padding:10px 12px; font-size:14px; }
+.also-spot { font-weight:600; color:#F4F1EA; }
+.also-when { color:#D8DEE3; flex:1; }
+.also-tag { font-size:11px; color:#B8C2CA; border:1px solid #44586A; border-radius:6px; padding:1px 6px; }
+.also-arp { background:transparent; border:1px dashed #44586A; }
 </style>
 </head>
 <body>
@@ -402,6 +426,13 @@ function render(rep, rules) {
       '<h2>' + esc(best.spot) + '</h2>' +
       '<p class="best-when">' + dayLong(best.date) + ' · ' + best.from + 'h – ' + best.to + 'h</p>' +
       '<p class="best-wind"><strong>' + best.avg + '</strong> nds de moyenne · rafales ' + (best.gmax ?? "–") + ' · ' + dirLabel(best.dir) + '</p>';
+    const others = all.filter(x => x !== best).sort((x, y) => (Number(y.src === "arome") - Number(x.src === "arome")) || (y.len - x.len) || (y.avg - x.avg));
+    if (others.length) {
+      html += '<div class="also"><p class="also-title">Kite aussi</p><ul>' + others.map(x =>
+        '<li class="' + (x.src === "arpege" ? "also-arp" : "") + '"><span class="also-spot">' + esc(x.spot) + '</span>' +
+        '<span class="also-when">' + dayShort(x.date) + ', ' + x.from + 'h – ' + x.to + 'h</span>' +
+        (x.src === "arpege" ? '<span class="also-tag">indicatif</span>' : '') + '</li>').join('') + '</ul></div>';
+    }
   } else {
     let top = null;
     for (const sp of rep.spots) for (const h of sp.hours) if (!top || h.wind > top.h.wind) top = { h, spot: sp.name };
@@ -411,23 +442,18 @@ function render(rep, rules) {
   }
   html += '</section>';
 
-  if (all.length > 1) {
-    const sorted = all.slice().sort((x, y) => (x.date + String(x.from).padStart(2, "0")).localeCompare(y.date + String(y.from).padStart(2, "0")));
-    html += '<section class="sessions"><h2>' + all.length + ' sessions' + (sure.length < all.length ? ' <span class="sess-note">dont ' + (all.length - sure.length) + ' en ARPEGE</span>' : '') + '</h2><ul>' +
-      sorted.map(x => '<li class="' + (x === best ? "sess-best " : "") + (x.src === "arpege" ? "sess-arp" : "") + '">' +
-        '<span class="sess-day">' + DAYS[wday(x.date)] + '<b>' + parseInt(x.date.slice(8), 10) + '</b></span>' +
-        '<span class="sess-main"><span class="sess-spot">' + esc(x.spot) + '</span><span class="sess-hours">' + x.from + 'h – ' + x.to + 'h' + (x.src === "arpege" ? ' · indicatif' : '') + '</span></span>' +
-        '<span class="sess-wind"><span class="sess-w"><b>' + x.avg + '</b> nds</span><small>raf ' + (x.gmax ?? "–") + '</small></span></li>').join('') +
-      '</ul></section>';
-  }
-
   html += '<section class="detail"><p class="detail-title">Détail par spot</p><div class="spots">';
   rep.ranking.forEach((s, si) => {
     const ses = sessionsOf(s, rules);
-    const maxW = s.hours.length ? Math.max(...s.hours.map(h => h.wind)) : 0;
-    html += '<details class="spot"><summary class="spot-head"><span class="spot-name"><h3>' + esc(s.name) + '</h3><span class="spot-sub">' +
-      (!s.hours.length ? 'Pas de prévision' : ses.length ? ses.length + ' session' + (ses.length > 1 ? 's' : '') + ', prochaine ' + dayShort(ses[0].date).toLowerCase() + ' ' + ses[0].from + 'h – ' + ses[0].to + 'h' : 'Rien de kitable, max ' + maxW + ' nds') +
-      '</span></span><span class="chev" aria-hidden="true"></span></summary>' +
+    const nx = ses[0];
+    let status;
+    if (!s.hours.length) status = '<span class="sst sst-no">Pas de prévision</span>';
+    else if (nx) status = '<span class="sst ' + (nx.src === "arome" ? "sst-ok" : "sst-maybe") + '"><span class="v-dot"></span><span class="sst-when">' +
+      dayLong(nx.date) + ', ' + nx.from + 'h – ' + nx.to + 'h</span><span class="sst-wind">' + nx.avg + ' nds</span></span>' +
+      (nx.src === "arpege" ? '<span class="sst-more">Indicatif, modèle ARPEGE</span>' : '') +
+      (ses.length > 1 ? '<span class="sst-more">+ ' + (ses.length - 1) + ' autre' + (ses.length > 2 ? 's' : '') + ' session' + (ses.length > 2 ? 's' : '') + '</span>' : '');
+    else status = '<span class="sst sst-no">Pas de session de ' + rules.minRun + ' h</span>';
+    html += '<details class="spot"><summary><span class="spot-top"><h3>' + esc(s.name) + '</h3><span class="chev" aria-hidden="true"></span></span>' + status + '</summary>' +
       '<div class="table"><div class="labels"><div class="c-time"></div><div class="lab-safe">Kitable</div><div>Note WG</div><div>Vent</div><div>Rafales</div><div>Dir.</div><div>°C</div><div>Nuages H</div><div>Nuages M</div><div>Nuages B</div><div>Pluie</div></div>';
     let prev = null, prevSrc = null;
     const perDay = {};
