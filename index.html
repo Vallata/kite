@@ -186,8 +186,53 @@ details.spot > summary:focus-visible { outline:none; box-shadow:inset 0 0 0 2px 
 .also li { display:flex; align-items:center; gap:10px; background:var(--night-2); border-radius:10px; padding:10px 12px; font-size:14px; }
 .also-spot { font-weight:600; color:#F4F1EA; }
 .also-when { color:#D8DEE3; flex:1; }
-.also-tag { font-size:11px; color:#B8C2CA; border:1px solid #44586A; border-radius:6px; padding:1px 6px; }
+.also-tag { white-space:nowrap; font-size:11px; color:#B8C2CA; border:1px solid #44586A; border-radius:6px; padding:1px 6px; }
 .also-arp { background:transparent; border:1px dashed #44586A; }
+
+.tagline { margin:4px 0 0; font-size:15px; font-weight:600; color:#14212B; }
+.k { margin:0 0 10px; font-size:12px; font-weight:600; letter-spacing:.7px; text-transform:uppercase; color:#F2B38F; }
+
+.days { display:flex; flex-direction:column; }
+.day { display:flex; gap:12px; padding:12px 0; border-top:1px solid #2E404D; }
+.day:first-child { border-top:none; padding-top:4px; }
+.day-name { width:62px; flex-shrink:0; font-weight:600; font-size:14px; padding-top:8px; white-space:nowrap; }
+.day-ses { flex:1; display:flex; flex-direction:column; gap:6px; }
+.ds { display:flex; align-items:center; gap:8px; background:var(--night-2); border-radius:10px; padding:8px 10px; font-size:14px; }
+.ds-spot { font-weight:600; white-space:nowrap; }
+.ds-h { color:#D8DEE3; flex:1; white-space:nowrap; }
+.ds-best { background:#0E7C66; }
+.ds-best .ds-h { color:#fff; }
+.ds-best .ds-spot { font-size:15px; }
+.ds-tag { white-space:nowrap; font-size:11px; font-weight:600; background:#F4F1EA; color:#0B5E4E; border-radius:6px; padding:1px 6px; }
+.ds-arp { background:transparent; border:1px dashed #44586A; }
+.ds-none { color:#8A96A0; font-size:14px; padding-top:8px; }
+
+.k-q { font-family:"Bricolage Grotesque", Georgia, serif; font-size:26px; font-weight:800; letter-spacing:0; text-transform:none; color:#F4F1EA; margin-bottom:14px; }
+
+.day-name { width:56px; }
+.day { gap:10px; }
+.ds { flex-wrap:wrap; row-gap:4px; min-width:0; }
+.day-ses { min-width:0; }
+
+.tagline { display:block; }
+.info { vertical-align:-4px; margin-left:6px; width:22px; height:22px; border-radius:11px; border:1.5px solid #6B747C; background:transparent; color:#4A5560; font:600 13px/1 Georgia, serif; font-style:italic; display:inline-flex; align-items:center; justify-content:center; padding:0; cursor:pointer; flex-shrink:0; position:relative; }
+.info::before { content:""; position:absolute; inset:-11px; }
+.info[aria-expanded="true"] { background:#14212B; border-color:#14212B; color:#F4F1EA; }
+.info:focus-visible { outline:3px solid #1E6FD9; outline-offset:2px; }
+.bubble { margin:8px 0 0; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; font-size:12px; line-height:1.45; color:#3A4550; box-shadow:0 4px 14px rgba(20,33,43,.08); }
+.bubble[hidden] { display:none; }
+
+.modebox { background:#fff; border:1px solid #C9C2B3; border-radius:14px; padding:12px 14px 12px 16px; }
+.modebox-on { background:#FDE7E2; border-color:var(--danger); }
+.mode-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.mode-title { font-size:15px; font-weight:600; }
+.mode-state { font-size:12px; color:#4A5560; }
+.switchbtn { border:none; background:transparent; padding:9px 0 9px 8px; cursor:pointer; }
+.switchbtn:focus-visible { outline:3px solid #1E6FD9; outline-offset:2px; border-radius:16px; }
+.modebox .bubble { margin-top:10px; box-shadow:none; background:#F7F4EE; display:flex; flex-direction:column; gap:6px; }
+.modebox .bubble[hidden] { display:none; }
+.help-on { color:#14212B; }
+.bubble b { font-weight:600; }
 </style>
 </head>
 <body>
@@ -195,16 +240,20 @@ details.spot > summary:focus-visible { outline:none; box-shadow:inset 0 0 0 2px 
   <header class="top">
     <div>
       <h1>Kite Gironde</h1>
-      <p class="meta" id="meta">AROME France HD 0.01°, Météo-France via Open-Meteo</p>
+      <p class="tagline">Où et quand kiter dans les 3 prochains&nbsp;jours<button class="info" id="info" aria-label="Source des prévisions" aria-expanded="false" aria-controls="meta">i</button></p>
+      <p class="meta bubble" id="meta" hidden>AROME France HD 0.01°, Météo-France via Open-Meteo</p>
     </div>
     <button class="refresh" id="refresh" aria-label="Actualiser">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
     </button>
   </header>
-  <button class="mode" id="mode" aria-pressed="false">
-    <span class="mode-text"><span class="mode-title">Mode pro</span><span class="mode-rule" id="mode-rule"></span></span>
-    <span class="switch"><span class="knob"></span></span>
-  </button>
+  <div class="modebox" id="modebox">
+    <div class="mode-row">
+      <span class="mode-text"><span class="mode-title"><span id="mode-label">Mode débutant</span><button class="info" id="mode-info" aria-label="Explication des modes" aria-expanded="false" aria-controls="mode-help">i</button></span></span>
+      <button class="switchbtn" id="mode" role="switch" aria-checked="false" aria-label="Mode pro"><span class="switch"><span class="knob"></span></span></button>
+    </div>
+    <p class="bubble" id="mode-help" hidden></p>
+  </div>
   <div id="content"><p class="loading">Chargement des prévisions…</p></div>
 </main>
 
@@ -333,7 +382,7 @@ function windowLabel(w, long) {
   const a = w[0], b = w[w.length - 1];
   const base = (long ? DAYS_LONG : DAYS)[wday(a.date)] + " " + parseInt(a.date.slice(8), 10) + ", " + a.hour + "h à " + (b.hour + 1) + "h";
   if (a.src !== "arpege") return base;
-  return base + (long ? " (ARPEGE 11 km, indicatif)" : " · ARPEGE");
+  return base + (long ? " (ARPEGE, à confirmer)" : " · à confirmer");
 }
 function parisNowKey(date) {
   const p = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" })
@@ -422,23 +471,16 @@ function render(rep, rules) {
   const best = all.slice().sort((x, y) => (Number(y.src === "arome") - Number(x.src === "arome")) || (y.len - x.len) || (y.avg - x.avg))[0];
   let html = '<section class="best">';
   if (best) {
-    html += '<p class="verdict ' + (best.src === "arome" ? "v-yes" : "v-maybe") + '"><span class="v-dot"></span>' + (best.src === "arome" ? "Ça kite" : "Peut-être, ARPEGE indicatif") + '</p>' +
-      '<h2>' + esc(best.spot) + '</h2>' +
-      '<p class="best-when">' + dayLong(best.date) + ' · ' + best.from + 'h – ' + best.to + 'h</p>' +
-      '<p class="best-wind"><strong>' + best.avg + '</strong> nds de moyenne · rafales ' + (best.gmax ?? "–") + ' · ' + dirLabel(best.dir) + '</p>';
-    const others = all.filter(x => x !== best).sort((x, y) => (Number(y.src === "arome") - Number(x.src === "arome")) || (y.len - x.len) || (y.avg - x.avg));
-    if (others.length) {
-      html += '<div class="also"><p class="also-title">Kite aussi</p><ul>' + others.map(x =>
-        '<li class="' + (x.src === "arpege" ? "also-arp" : "") + '"><span class="also-spot">' + esc(x.spot) + '</span>' +
-        '<span class="also-when">' + dayShort(x.date) + ', ' + x.from + 'h – ' + x.to + 'h</span>' +
-        (x.src === "arpege" ? '<span class="also-tag">indicatif</span>' : '') + '</li>').join('') + '</ul></div>';
-    }
+    const dates = [...new Set(all.map(x => x.date))].sort();
+    html += '<p class="k k-q">Ça kite ?</p><div class="days">' + dates.map(d => {
+      const ses = all.filter(x => x.date === d).sort((x, y) => (y === best) - (x === best) || x.from - y.from);
+      return '<div class="day"><span class="day-name">' + DAYS_LONG[wday(d)].slice(0, 3) + '. ' + parseInt(d.slice(8), 10) + '</span><div class="day-ses">' +
+        (ses.length ? ses.map(x => '<div class="ds' + (x === best ? ' ds-best' : '') + (x.src === "arpege" ? ' ds-arp' : '') + '"><span class="ds-spot">' + esc(x.spot) + '</span><span class="ds-h">' + x.from + 'h – ' + x.to + 'h</span>' +
+          (x === best ? '<span class="ds-tag">le mieux</span>' : x.src === "arpege" ? '<span class="also-tag">à confirmer</span>' : '') + '</div>').join('') : '<span class="ds-none">pas de kite</span>') +
+        '</div></div>';
+    }).join('') + '</div>';
   } else {
-    let top = null;
-    for (const sp of rep.spots) for (const h of sp.hours) if (!top || h.wind > top.h.wind) top = { h, spot: sp.name };
-    html += '<p class="verdict v-no"><span class="v-dot"></span>Pas de session</p><h2>Rien de kitable</h2>' +
-      '<p class="best-when">sur les 3 prochains jours (' + rules.min + ' nds, ' + rules.minRun + ' h d\'affilée)</p>' +
-      (top ? '<p class="best-wind">Meilleur vent prévu : ' + esc(top.spot) + ', ' + dayShort(top.h.date).toLowerCase() + ' à ' + top.h.hour + 'h, <strong>' + top.h.wind + '</strong> nds</p>' : '');
+    html += '<p class="k k-q">Ça kite ?</p><h2>Pas de kite</h2><p class="best-when">sur les 3 prochains jours</p><p class="best-wind">Aucun créneau de ' + rules.minRun + ' h à ' + rules.min + ' nds ou plus.</p>';
   }
   html += '</section>';
 
@@ -450,7 +492,7 @@ function render(rep, rules) {
     if (!s.hours.length) status = '<span class="sst sst-no">Pas de prévision</span>';
     else if (nx) status = '<span class="sst ' + (nx.src === "arome" ? "sst-ok" : "sst-maybe") + '"><span class="v-dot"></span><span class="sst-when">' +
       dayLong(nx.date) + ', ' + nx.from + 'h – ' + nx.to + 'h</span><span class="sst-wind">' + nx.avg + ' nds</span></span>' +
-      (nx.src === "arpege" ? '<span class="sst-more">Indicatif, modèle ARPEGE</span>' : '') +
+      (nx.src === "arpege" ? '<span class="sst-more">À confirmer (modèle ARPEGE, moins précis)</span>' : '') +
       (ses.length > 1 ? '<span class="sst-more">+ ' + (ses.length - 1) + ' autre' + (ses.length > 2 ? 's' : '') + ' session' + (ses.length > 2 ? 's' : '') + '</span>' : '');
     else status = '<span class="sst sst-no">Pas de session de ' + rules.minRun + ' h</span>';
     html += '<details class="spot"><summary><span class="spot-top"><h3>' + esc(s.name) + '</h3><span class="chev" aria-hidden="true"></span></span>' + status + '</summary>' +
@@ -508,8 +550,14 @@ async function refresh(force) {
   const rules = makeRules(beginner);
   const modeBtn = document.getElementById("mode");
   modeBtn.classList.toggle("mode-on", pro);
-  modeBtn.setAttribute("aria-pressed", String(pro));
-  document.getElementById("mode-rule").textContent = (pro ? "Activé : " : "Désactivé, mode débutant : ") + rules.min + " à " + rules.max + " nds, rafales ≤ vent +" + rules.spread + (rules.minRun > 1 ? ", " + rules.minRun + " h d'affilée minimum" : "") + ". Direction non vérifiée.";
+  modeBtn.setAttribute("aria-checked", String(pro));
+  document.getElementById("modebox").classList.toggle("modebox-on", pro);
+  document.getElementById("mode-label").textContent = pro ? "Mode pro activé" : "Mode débutant";
+  const desc = (c) => c.min + " à " + c.max + " nds, rafales ≤ vent +" + c.gustSpread + ", " + c.minRun + " h d'affilée minimum.";
+  document.getElementById("mode-help").innerHTML =
+    '<span class="' + (pro ? "" : "help-on") + '"><b>Débutant</b> (par défaut) : ' + desc(CONFIG.safety.beginner) + '</span>' +
+    '<span class="' + (pro ? "help-on" : "") + '"><b>Pro</b> : ' + desc(CONFIG.safety.pro) + '</span>' +
+    '<span>Dans les deux modes, la direction du vent n\'est pas vérifiée.</span>';
   const content = document.getElementById("content");
   try {
     const d = await getData(force);
@@ -523,6 +571,14 @@ async function refresh(force) {
 
 if (typeof document !== "undefined") {
   document.getElementById("refresh").addEventListener("click", () => refresh(true));
+  document.getElementById("mode-info").addEventListener("click", (e) => {
+    const m = document.getElementById("mode-help"), open = m.hidden;
+    m.hidden = !open; e.currentTarget.setAttribute("aria-expanded", String(open));
+  });
+  document.getElementById("info").addEventListener("click", (e) => {
+    const m = document.getElementById("meta"), open = m.hidden;
+    m.hidden = !open; e.currentTarget.setAttribute("aria-expanded", String(open));
+  });
   document.getElementById("mode").addEventListener("click", () => {
     store("kite-pro", load("kite-pro") === "1" ? "0" : "1");
     refresh(false);

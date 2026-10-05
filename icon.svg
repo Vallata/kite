@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#14212B"/><path d="M128 300 Q256 90 384 300 Q256 250 128 300Z" fill="#E4572E"/><path d="M160 290 L256 420 L352 290" fill="none" stroke="#F4F1EA" stroke-width="10" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#14212B"/>
+  <g transform="translate(11 -2) rotate(-32 256 256) translate(256 256) scale(0.82) translate(-256 -256)">
+    <g stroke="#F4F1EA" stroke-linecap="round" fill="none">
+      <path d="M128 182 L238 452" stroke-width="6"/>
+      <path d="M384 182 L274 452" stroke-width="6"/>
+      <path d="M226 455 H286" stroke-width="14"/>
+    </g>
+    <g transform="translate(256 102) scale(0.75) translate(-256 -226)">
+      <path d="M84 334 C112 118 400 118 428 334 C394 188 118 188 84 334 Z" fill="#E4572E"/>
+    </g>
+  </g>
+</svg>
